@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UPI Fraud Detection</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            padding: 40px;
+            margin: 0;
+        }
+
+        .form-container {
+            max-width: 550px;
+            background-color: #ffffff;
+            margin: auto;
+            padding: 35px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            animation: slideFade 0.3s ease-in-out;
+        }
+
+        @keyframes slideFade {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border 0.2s ease;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .submit-btn {
+            margin-top: 30px;
+            width: 100%;
+            background-color: #4CAF50;
+            color: #ffffff;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 12px;
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            text-align: center;
+            font-size: 16px;
+            border-radius: 8px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>UPI Fraud Detection</h2>
+
+        <form action="/predict" method="POST">
+            <label for="amount">Amount</label>
+            <input type="number" step="0.01" name="amount" required>
+
+            <label for="Year">Year</label>
+            <input type="number" name="Year" value="2025" required>
+
+            <label for="Month">Month</label>
+            <input type="number" name="Month" min="1" max="12" required>
+
+            <label for="transaction_type">Transaction Type</label>
+            <select name="transaction_type" required>
+                {% for t in groups.transaction_types %}
+                    <option value="{{ t }}">{{ t }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="payment_gateway">Payment Gateway</label>
+            <select name="payment_gateway" required>
+                {% for pg in groups.payment_gateways %}
+                    <option value="{{ pg }}">{{ pg }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="state">Transaction State</label>
+            <select name="state" required>
+                {% for state in groups.states %}
+                    <option value="{{ state }}">{{ state }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="merchant_category">Merchant Category</label>
+            <select name="merchant_category" required>
+                {% for cat in groups.merchant_categories %}
+                    <option value="{{ cat }}">{{ cat }}</option>
+                {% endfor %}
+            </select>
+
+            <button class="submit-btn" type="submit">Predict</button>
+        </form>
+
+        {% if prediction_text %}
+            <div class="result">{{ prediction_text|safe }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>

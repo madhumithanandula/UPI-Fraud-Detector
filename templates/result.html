@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediction Result</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        h3 {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            color: #444;
+        }
+
+        .details p {
+            margin: 8px 0;
+            font-size: 15px;
+            color: #555;
+        }
+
+        .details strong {
+            color: #333;
+        }
+
+        .result {
+            font-size: 18px;
+            margin: 25px 0;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .result.green {
+            color: #2e7d32;
+        }
+
+        .result.red {
+            color: #c62828;
+        }
+
+        .unclear-banner {
+            background-color: #fff3f3;
+            border: 1px solid #ffcdd2;
+            color: #d32f2f;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 30px;
+            font-size: 15px;
+        }
+
+        .action-btn {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .action-btn a,
+        .action-btn input[type="submit"] {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 5px;
+        }
+
+        .action-btn a:hover,
+        .action-btn input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .action-btn .complaint {
+            background-color: #e53935;
+        }
+
+        .action-btn .complaint:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Prediction Result</h2>
+
+        <div class="details">
+            <h3>Entered Details</h3>
+            {% for key, value in input_data.items() %}
+                <p><strong>{{ key.replace('_', ' ').capitalize() }}:</strong> {{ value }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="result">{{ result }}</div>
+
+        {% if recovery %}
+            <div class="result {% if 'Not' in recovery %}red{% else %}green{% endif %}">
+                {{ recovery }}
+            </div>
+        {% endif %}
+
+        {% if action %}
+            <div class="result {% if 'Block' in action %}red{% else %}green{% endif %}">
+                {{ action }}
+            </div>
+        {% endif %}
+
+        {% if not allow_transaction %}
+            <div class="unclear-banner">
+                This transaction was flagged as fraudulent and cannot proceed. You can file a complaint for further review.
+            </div>
+
+            <div class="action-btn">
+                <!-- <a href="/complaint/{{ transaction_id }}?amount={{ input_data['amount'] }}&year={{ input_data['Year'] }}&month={{ input_data['Month'] }}&transaction_type={{ input_data['transaction_type'] }}&payment_gateway={{ input_data['payment_gateway'] }}&state={{ input_data['state'] }}&merchant_category={{ input_data['merchant_category'] }}&from_home=False" -->
+                <a href="/complaint/{{ transaction_id }}"
+       class="complaint">Raise Complaint</a>
+            </div>
+        {% else %}
+            <div class="unclear-banner">
+                This transaction was not flagged as fraudulent. If any issues arise, you may request a recovery manually.
+            </div>
+
+            <div class="action-btn">
+                <form action="/payment_details" method="post">
+                    {% for key, value in input_data.items() %}
+                        <input type="hidden" name="{{ key }}" value="{{ value }}">
+                    {% endfor %}
+                    <input type="hidden" name="transaction_id" value="{{ transaction_id }}">
+                    <input type="submit" value="Initiate Payment">
+                </form>
+            </div>
+        {% endif %}
+
+        <div class="action-btn">
+            <a href="/">Back to home</a>
+        </div>
+    </div>
+</body>
+</html>

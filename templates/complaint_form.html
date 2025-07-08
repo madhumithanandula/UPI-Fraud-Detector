@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Raise Complaint</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            padding: 40px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 650px;
+            background-color: #ffffff;
+            margin: auto;
+            padding: 40px 45px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        h3 {
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .details p {
+            margin: 6px 0;
+            font-size: 15px;
+            color: #555;
+        }
+
+        .details strong {
+            color: #333;
+        }
+
+        .form-section {
+            margin-top: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: border 0.2s ease;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .form-section:last-child {
+            text-align: center;
+        }
+
+        .transaction-dropdown {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Raise Complaint for Transaction: {{ transaction_details['Transaction ID'] if transaction_details else 'Select a Transaction' }}</h2>
+
+        <div class="details">
+            {% if from_home %}
+                <h3>Select Transaction</h3>
+                <form method="GET" action="/complaint">
+                    <div class="form-section transaction-dropdown">
+                        <label for="transaction_id">Transaction ID</label>
+                        <select name="transaction_id" id="transaction_id" required onchange="this.form.submit()">
+                            <option value="">Select a Transaction</option>
+                            {% for transaction in transactions %}
+                                <option value="{{ transaction.transaction_id }}" {% if transaction.transaction_id == request.args.get('transaction_id') %}selected{% endif %}>
+                                    {{ transaction.transaction_id }} - ₹{{ transaction.amount }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
+            {% else %}
+                <h3>Transaction Details</h3>
+                <p><strong>Transaction ID:</strong> {{ transaction_details['Transaction ID'] }}</p>
+                <p><strong>Amount:</strong> ₹{{ transaction_details['Amount'] }}</p>
+                <p><strong>Year:</strong> {{ transaction_details['Year'] }}</p>
+                <p><strong>Month:</strong> {{ transaction_details['Month'] }}</p>
+                <p><strong>Transaction Type:</strong> {{ transaction_details['Transaction Type'] }}</p>
+                <p><strong>Payment Gateway:</strong> {{ transaction_details['Payment Gateway'] }}</p>
+                <p><strong>State:</strong> {{ transaction_details['State'] }}</p>
+                <p><strong>Merchant Category:</strong> {{ transaction_details['Merchant Category'] }}</p>
+                <input type="hidden" name="transaction_id" value="{{ transaction_details['Transaction ID'] }}">
+                <input type="hidden" name="amount" value="{{ transaction_details['Amount'] }}">
+                <input type="hidden" name="year" value="{{ transaction_details['Year'] }}">
+                <input type="hidden" name="month" value="{{ transaction_details['Month'] }}">
+                <input type="hidden" name="transaction_type" value="{{ transaction_details['Transaction Type'] }}">
+                <input type="hidden" name="payment_gateway" value="{{ transaction_details['Payment Gateway'] }}">
+                <input type="hidden" name="state" value="{{ transaction_details['State'] }}">
+                <input type="hidden" name="merchant_category" value="{{ transaction_details['Merchant Category'] }}">
+            {% endif %}
+        </div>
+
+        <form method="POST" action="/submit_complaint">
+            <div class="form-section">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-section">
+                <label for="email">Your Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-section">
+                <label for="complaint_details">Complaint Details</label>
+                <textarea id="complaint_details" name="complaint_details" rows="5" required></textarea>
+            </div>
+            <input type="hidden" name="transaction_id" value="{{ transaction_details['Transaction ID'] }}">
+
+            <input type="hidden" name=" transaction_details" value="{{ transaction_details | tojson }}">
+
+            <div class="form-section">
+                <button type="submit">Submit Complaint</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

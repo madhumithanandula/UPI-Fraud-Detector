@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sender Information</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            padding: 40px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            background-color: #ffffff;
+            margin: auto;
+            padding: 40px 45px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .action-btn {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 12px 25px;
+            font-size: 15px;
+            font-weight: 500;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Sender Information</h2>
+        <form method="post" action="/initiate_payment">
+            <!-- Include transaction details as hidden fields -->
+            {% for key, value in transaction_data.items() %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}">
+            {% endfor %}
+
+            <label for="sender_name">Sender Name</label>
+            <input type="text" id="sender_name" name="sender_name" required>
+
+            <label for="sender_upi">Sender UPI ID</label>
+            <input type="text" id="sender_upi" name="sender_upi" placeholder="example@upi" required>
+
+            <label for="remarks">Remarks (Optional)</label>
+            <textarea id="remarks" name="remarks" rows="3" placeholder="Reason for transaction..."></textarea>
+
+            <div class="action-btn">
+                <input type="submit" value="Confirm and Pay">
+            </div>
+        </form>
+    </div>
+</body>
+</html>

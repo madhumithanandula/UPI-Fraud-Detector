@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Complaint Submitted</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            padding: 40px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 650px;
+            background-color: #ffffff;
+            margin: auto;
+            padding: 40px 45px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            text-align: center;
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .details p {
+            font-size: 15px;
+            margin: 8px 0;
+            color: #555;
+        }
+
+        .details strong {
+            color: #333;
+        }
+
+        .btn {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .btn a {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            color: #ffffff;
+            border-radius: 6px;
+            font-size: 15px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn a:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Complaint Submitted Successfully</h2>
+
+        <div class="details">
+            <h3>Your Complaint Details</h3>
+            <p><strong>Transaction ID:</strong> {{ complaint_data['Transaction ID'] }}</p>
+            <p><strong>Your Name:</strong> {{ complaint_data['Name'] }}</p>
+            <p><strong>Your Email:</strong> {{ complaint_data['Email'] }}</p>
+            <p><strong>Complaint Details:</strong> {{ complaint_data['Complaint Details'] }}</p>
+        </div>
+
+        <div class="btn">
+            <a href="/">Back to Form</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Confirmation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f1f1;
+            padding: 40px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 40px 45px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #2e7d32;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        h2::before {
+            content: "✅ ";
+        }
+
+        h3 {
+            color: #444;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 15px;
+            margin: 8px 0;
+            color: #555;
+        }
+
+        .details strong {
+            color: #333;
+        }
+
+        .action-btn {
+            margin-top: 35px;
+            text-align: center;
+        }
+
+        .action-btn a {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            color: #ffffff;
+            border-radius: 6px;
+            font-size: 15px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-btn a:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Payment Successful</h2>
+
+        {% if payment_data.sender_name %}
+            <p><strong>Sender Name:</strong> {{ payment_data.sender_name }}</p>
+            <p><strong>Sender UPI ID:</strong> {{ payment_data.sender_upi }}</p>
+            {% if payment_data.remarks %}
+                <p><strong>Remarks:</strong> {{ payment_data.remarks }}</p>
+            {% endif %}
+        {% endif %}
+
+        <div class="details">
+            <h3>Transaction Details</h3>
+            {% for key, value in payment_data.items() %}
+                <p><strong>{{ key.replace('_', ' ').capitalize() }}:</strong> {{ value }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="action-btn">
+            <a href="/">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transaction History</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <h1 class="mb-4">Your Transaction History</h1>
+
+        {% if transactions %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Amount</th>
+                        <th>Year</th>
+                        <th>Month</th>
+                        <th>Type</th>
+                        <th>Payment Gateway</th>
+                        <th>State</th>
+                        <th>Merchant Category</th>
+                        <th>Prediction</th>
+                        <th>Confidence</th>
+                        <th>Submitted At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                        <tr>
+                            <td>{{ transaction.transaction_id }}</td>
+                            <td>{{ transaction.amount }}</td>
+                            <td>{{ transaction.year }}</td>
+                            <td>{{ transaction.month }}</td>
+                            <td>{{ transaction.transaction_type }}</td>
+                            <td>{{ transaction.payment_gateway }}</td>
+                            <td>{{ transaction.state }}</td>
+                            <td>{{ transaction.merchant_category }}</td>
+                            <td>{{ transaction.prediction }}</td>
+                            <td>{{ '%.2f' % (transaction.confidence * 100) }}%</td>
+                            <td>{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            <td>
+                                <!-- "Raise Complaint" button -->
+                                <a href="{{ url_for('complaint_form', transaction_id=transaction.transaction_id) }}" class="btn btn-warning btn-sm">Raise Complaint</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No transactions found.</p>
+        {% endif %}
+
+        <a href="{{ url_for('home') }}" class="btn btn-primary">Back to Home</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
